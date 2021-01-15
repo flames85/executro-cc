@@ -96,3 +96,39 @@ TEST(ExecutorTest, should_be_ok_by_4_turn_right)
 
 	ASSERT_EQ(Position(1, 2, EAST), excutor.getPosition());
 }
+
+
+TEST(ExecutorTest, should_be_ok_by_1_forward)
+{
+	Executor excutor;
+	excutor.config(Position(1, 2, EAST));
+
+	CommandForward forward;
+	excutor.exec(&forward);
+
+	ASSERT_EQ(Position(2, 2, EAST), excutor.getPosition());
+}
+
+
+TEST(ExecutorTest, should_be_ok_by_1_backward)
+{
+	Executor excutor;
+	excutor.config(Position(1, 2, EAST));
+
+	CommandBackward backward;
+	excutor.exec(&backward);
+
+	ASSERT_EQ(Position(0, 2, EAST), excutor.getPosition());
+}
+
+
+TEST(ExecutorTest, should_be_ok_by_1_trun_round)
+{
+	Executor excutor;
+	excutor.config(Position(1, 2, EAST));
+
+	CommandTurnRound rurnRound;
+	excutor.exec(&rurnRound);
+
+	ASSERT_EQ(Position(1, 2, WEST), excutor.getPosition());
+}

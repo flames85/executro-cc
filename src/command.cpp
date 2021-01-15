@@ -1,18 +1,45 @@
 #include "command.h"
 
 
-void Command::turn(Position& pos, int times) const
+namespace
 {
-	static Direction directions[] = { EAST, SOUTH, WEST, NORTH };
-	pos.heading = directions[(pos.heading + times) % DIRECTION_MAX_COUNT];
+	Position turn(const Position& pos, int times)
+	{
+		static Direction directions[] = { EAST, SOUTH, WEST, NORTH };
+		Direction heading = directions[(pos.heading + times) % DIRECTION_MAX_COUNT];
+
+		return Position{ pos.x, pos.y, heading };
+	}
+
+	Position moveX(const Position& pos, int times)
+	{
+		return Position{ pos.x + times, pos.y, pos.heading };
+	}
+
 }
 
-void CommandTurnLeft::exec(Position& pos) const
+Position CommandTurnLeft::exec(const Position& pos) const
 {
-	turn(pos, 3);
+	return turn(pos, 3);
 }
 
-void CommandTurnRight::exec(Position& pos) const
+Position CommandTurnRight::exec(const Position& pos) const
 {
-	turn(pos, 1);
+	return turn(pos, 1);
+}
+
+
+Position CommandTurnRound::exec(const Position& pos) const
+{
+	return turn(pos, 2);
+}
+
+Position CommandForward::exec(const Position& pos) const
+{
+	return moveX(pos, 1);
+}
+
+Position CommandBackward::exec(const Position& pos) const
+{
+	return moveX(pos, -1);
 }

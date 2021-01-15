@@ -14,5 +14,5 @@ void Executor::config(const Position& pos)
 
 void Executor::exec(Command* cmd)
 {
-	cmd->exec(pos);
+	pos = cmd->exec(pos);
 }
