@@ -1,6 +1,18 @@
 #include "executor.h"
 #include <iostream>
 
-void hello_executor() {
-    std::cout << "hello, executor" << std::endl;
+
+const Position& Executor::getPosition() const
+{
+	return pos; 
+}
+
+void Executor::config(const Position& pos)
+{
+	this->pos = pos;
+}
+
+void Executor::exec(Command* cmd)
+{
+	cmd->exec(pos);
 }
