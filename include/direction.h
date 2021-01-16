@@ -1,5 +1,5 @@
 #pragma once
-enum Direction {
+enum class Direction {
 	EAST, SOUTH, WEST, NORTH, DIRECTION_MAX_COUNT
 };
 

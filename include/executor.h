@@ -12,7 +12,7 @@ struct Executor
 	void exec(Command* cmd);
 
 private:
-	Position pos{ 0, 0, NORTH };
+	Position pos{ 0, 0,  Direction::NORTH };
 };
 
 
