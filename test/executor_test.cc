@@ -1,160 +1,157 @@
 #include <gtest/gtest.h>
 #include "executor.h"
 #include "command.h"
-
-
-TEST(ExecutorTest, should_be_ok_by_init)
+////////////////////////////////////////////////////////////////////////////////////
+struct ExecutorTest : testing::Test
 {
-	Executor excutor;
+protected:
+	Executor		excutor;
+};
+TEST_F(ExecutorTest, should_be_ok_by_init)
+{
 	ASSERT_EQ(Position(0, 0, Direction::NORTH), excutor.getPosition());
 }
-
-
-TEST(ExecutorTest, should_be_ok_by_config)
+TEST_F(ExecutorTest, should_be_ok_by_config)
 {
-	Executor excutor;
 	excutor.config(Position(1, 2, Direction::EAST));
+
 	ASSERT_EQ(Position(1, 2, Direction::EAST), excutor.getPosition());
 }
-
-
-TEST(ExecutorTest, should_be_ok_by_turn_left)
+////////////////////////////////////////////////////////////////////////////////////
+struct ExecutorTestTurnLeft : public ExecutorTest
 {
-	Executor excutor;
-	excutor.config(Position(1, 2, Direction::EAST));
-
-	CommandTurnLeft left;
-	excutor.exec(&left);
-
-	ASSERT_EQ(Position(1, 2, Direction::NORTH), excutor.getPosition());
-}
-
-TEST(ExecutorTest, should_be_ok_by_3_turn_left)
+	virtual void SetUp()
+	{
+		excutor.config(Position(1, 2, Direction::EAST));
+	}
+protected:
+	CommandTurnLeft left; 
+};
+TEST_F(ExecutorTestTurnLeft, should_be_ok_by_3_turn_left)
 {
-	Executor excutor;
-	excutor.config(Position(1, 2, Direction::EAST));
-
-	CommandTurnLeft left;
-	excutor.exec(&left);
-	excutor.exec(&left);
-	excutor.exec(&left);
-
+	excutor.exec(left);
+	excutor.exec(left);
+	excutor.exec(left);
 	ASSERT_EQ(Position(1, 2, Direction::SOUTH), excutor.getPosition());
 }
 
-TEST(ExecutorTest, should_be_ok_by_4_turn_left)
+TEST_F(ExecutorTestTurnLeft, should_be_ok_by_4_turn_left)
 {
-	Executor excutor;
-	excutor.config(Position(1, 2, Direction::EAST));
-
-	CommandTurnLeft left;
-	excutor.exec(&left);
-	excutor.exec(&left);
-	excutor.exec(&left);
-	excutor.exec(&left);
-
+	excutor.exec(left);
+	excutor.exec(left);
+	excutor.exec(left);
+	excutor.exec(left);
 
 	ASSERT_EQ(Position(1, 2, Direction::EAST), excutor.getPosition());
 }
-
-
-TEST(ExecutorTest, should_be_ok_by_1_turn_right)
+TEST_F(ExecutorTestTurnLeft, should_be_ok_by_turn_left)
 {
-	Executor excutor;
-	excutor.config(Position(1, 2, Direction::EAST));
-
-	CommandTurnRight right;
-
-	excutor.exec(&right);
-
-	ASSERT_EQ(Position(1, 2, Direction::SOUTH), excutor.getPosition());
-}
-
-TEST(ExecutorTest, should_be_ok_by_3_turn_right)
-{
-	Executor excutor;
-	excutor.config(Position(1, 2, Direction::EAST));
-
-	CommandTurnRight right;
-	excutor.exec(&right);
-	excutor.exec(&right);
-	excutor.exec(&right);
-
+	excutor.exec(left);
 	ASSERT_EQ(Position(1, 2, Direction::NORTH), excutor.getPosition());
 }
 
-TEST(ExecutorTest, should_be_ok_by_4_turn_right)
-{
-	Executor excutor;
-	excutor.config(Position(1, 2, Direction::EAST));
 
+////////////////////////////////////////////////////////////////////////////////////
+struct ExecutorTestTurnRight : public ExecutorTest
+{
+	virtual void SetUp()
+	{
+		excutor.config(Position(1, 2, Direction::EAST));
+	}
+protected:
 	CommandTurnRight right;
-	excutor.exec(&right);
-	excutor.exec(&right);
-	excutor.exec(&right);
-	excutor.exec(&right);
+};
+TEST_F(ExecutorTestTurnRight, should_be_ok_by_1_turn_right)
+{
+	excutor.exec(right);
+
+	ASSERT_EQ(Position(1, 2, Direction::SOUTH), excutor.getPosition());
+}
+TEST_F(ExecutorTestTurnRight, should_be_ok_by_3_turn_right)
+{
+	CommandTurnRight right;
+	excutor.exec(right);
+	excutor.exec(right);
+	excutor.exec(right);
+
+	ASSERT_EQ(Position(1, 2, Direction::NORTH), excutor.getPosition());
+}
+TEST_F(ExecutorTestTurnRight, should_be_ok_by_4_turn_right)
+{
+	excutor.exec(right);
+	excutor.exec(right);
+	excutor.exec(right);
+	excutor.exec(right);
 
 	ASSERT_EQ(Position(1, 2, Direction::EAST), excutor.getPosition());
 }
 
-
-TEST(ExecutorTest, should_be_ok_from_EAST_and_1_forward)
+////////////////////////////////////////////////////////////////////////////////////
+struct ExecutorTestForward : public ExecutorTest
 {
-	Executor excutor;
-	excutor.config(Position(1, 2, Direction::EAST));
-
+	virtual void SetUp()
+	{
+		excutor.config(Position(1, 2, Direction::EAST));
+	}
+protected:
 	CommandForward forward;
-	excutor.exec(&forward);
+};
+TEST_F(ExecutorTestForward, should_be_ok_from_and_1_forward)
+{
+	excutor.exec(forward);
 
 	ASSERT_EQ(Position(2, 2, Direction::EAST), excutor.getPosition());
 }
 
-TEST(ExecutorTest, should_be_ok_by_3_forward)
+TEST_F(ExecutorTestForward, should_be_ok_by_3_forward)
 {
-	Executor excutor;
 	excutor.config(Position(201, 322, Direction::SOUTH));
 
-	CommandForward forward;
-	excutor.exec(&forward);
-	excutor.exec(&forward);
-	excutor.exec(&forward);
+	excutor.exec(forward);
+	excutor.exec(forward);
+	excutor.exec(forward);
 
 	ASSERT_EQ(Position(201, 319, Direction::SOUTH), excutor.getPosition());
 }
+////////////////////////////////////////////////////////////////////////////////////
 
-
-TEST(ExecutorTest, should_be_ok_by_1_backward)
+struct ExecutorTestBackward : public ExecutorTest
 {
-	Executor excutor;
-	excutor.config(Position(1, 2, Direction::EAST));
-
+	virtual void SetUp()
+	{
+		excutor.config(Position(1, 2, Direction::EAST));
+	}
+protected:
 	CommandBackward backward;
-	excutor.exec(&backward);
+};
+TEST_F(ExecutorTestBackward, should_be_ok_by_1_backward)
+{
+	excutor.exec(backward);
 
 	ASSERT_EQ(Position(0, 2, Direction::EAST), excutor.getPosition());
 }
-
-
-TEST(ExecutorTest, should_be_ok_by_2_backward)
+TEST_F(ExecutorTestBackward, should_be_ok_by_2_backward)
 {
-	Executor excutor;
 	excutor.config(Position(100, 200, Direction::NORTH));
 
-	CommandBackward backward;
-	excutor.exec(&backward);
-	excutor.exec(&backward);
+	excutor.exec(backward);
+	excutor.exec(backward);
 
 	ASSERT_EQ(Position(100, 198, Direction::NORTH), excutor.getPosition());
 }
 
-
-TEST(ExecutorTest, should_be_ok_by_1_trun_round)
+////////////////////////////////////////////////////////////////////////////////////
+struct ExecutorTestTurnround : public ExecutorTest
 {
-	Executor excutor;
-	excutor.config(Position(1, 2, Direction::EAST));
-
-	CommandTurnRound rurnRound;
-	excutor.exec(&rurnRound);
-
+	virtual void SetUp()
+	{
+		excutor.config(Position(1, 2, Direction::EAST));
+	}
+protected:
+	CommandTurnRound roundRound;
+};
+TEST_F(ExecutorTestTurnround, should_be_ok_by_1_trun_round)
+{
+	excutor.exec(roundRound);
 	ASSERT_EQ(Position(1, 2, Direction::WEST), excutor.getPosition());
 }

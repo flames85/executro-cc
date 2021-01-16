@@ -1,17 +1,22 @@
 #include "command.h"
-
-
 namespace
 {
 	Position turn(const Position& pos, int times)
 	{
-		static Direction directions[] = { Direction::EAST,  Direction::SOUTH,  Direction::WEST,  Direction::NORTH };
-		Direction heading = directions[(int(pos.heading) + times) % int(Direction::DIRECTION_MAX_COUNT)];
+		static Direction directions[] = 
+		{ 
+			Direction::EAST,  
+			Direction::SOUTH,  
+			Direction::WEST,  
+			Direction::NORTH 
+		};
+
+		Direction heading = 
+			directions[(int(pos.heading) + times) % int(Direction::DIRECTION_MAX_COUNT)];
 
 		return Position{ pos.x, pos.y, heading };
 	}
-
-	Position move(const Position& pos, int factor)
+	Position move(const Position& pos, int factor) // member of position???
 	{
 		static Position positions[] = 
 		{ 
